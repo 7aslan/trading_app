@@ -1,11 +1,14 @@
 import React from 'react'
 import finnHub from '../apis/finnHub';
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { BsFillCaretDownFill, BsFillCaretUpFill } from "react-icons/bs"
+import { WatchListContext } from '../context/watchListContext';
 
 const StockList = () => {
-  const [stock, setStock] = useState([])
-  const [wathcList, setWatchList] = useState(["GOGL", "MSFT", "AMZN"]);
+  const [stock, setStock] = useState([]);
+  const { watchList } = useContext(WatchListContext)
+
+
 
   const changeColor = (change) => {
     return change > 0 ? "success" : "danger";
@@ -19,7 +22,7 @@ const StockList = () => {
     const fetchData = async () => {
       const responses = [];
       try {
-        const responses = await Promise.all(wathcList.map((stock) => {
+        const responses = await Promise.all(watchList.map((stock) => {
           return finnHub.get("/quote", {
             params: {
               symbol: stock
@@ -45,7 +48,7 @@ const StockList = () => {
     }
     fetchData();
     return () => (isMounted = false)
-  }, [])
+  }, [watchList])
 
 
   return (
